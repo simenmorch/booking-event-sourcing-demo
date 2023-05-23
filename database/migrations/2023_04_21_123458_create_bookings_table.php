@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid()->unique();
             $table->string('customer_name');
             $table->string('customer_email');
             $table->string('customer_phone')->nullable();
             $table->string('type');
+            $table->integer('guests');
+            $table->integer('price');
             $table->timestamps();
 
             $table->index('customer_email');
