@@ -8,13 +8,6 @@ enum Price: int
     case JOINED_TRIP = 60;
     case PACKAGE_TRIP = 40;
 
-    public static function calculate(BookingType $type, int $guests): int
-    {
-        $price = self::fromName($type->name);
-
-        return $price->value * $guests;
-    }
-
     public static function fromName(string $name): Price
     {
         foreach (self::cases() as $case) {

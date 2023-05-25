@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Domains\Bookings\Commands\InitializeBookingCmd;
-use App\Domains\Bookings\Enums\BookingType;
+use App\Domains\Bookings\Commands\CreateBookingCmd;
 use App\Domains\Bookings\Projections\BookingProjection;
 use Illuminate\Support\Str;
 use Spatie\EventSourcing\Commands\CommandBus;
@@ -24,20 +23,17 @@ class BookingController extends Controller
             'email' => 'required|email',
             'phone' => 'nullable|string',
             'type' => 'required|string',
-            'guests' => 'required|int',
         ]);
 
         $uuid = Str::uuid();
 
         $bus = app(CommandBus::class);
 
-        $bus->dispatch(new InitializeBookingCmd(
+        $bus->dispatch(new CreateBookingCmd(
             $uuid,
             $data['email'],
             $data['name'],
             $data['phone'],
-            BookingType::from($data['type']),
-            $data['guests'],
         ));
 
         return response()->json([BookingProjection::find($uuid)]);

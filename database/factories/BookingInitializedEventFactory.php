@@ -2,21 +2,23 @@
 
 namespace Database\Factories;
 
-use App\Domains\Bookings\Enums\BookingType;
-use App\Domains\Bookings\Events\BookingInitializedEvent;
+use App\Domains\Bookings\Events\BookingCreatedEvent;
 use Faker\Factory;
+use Illuminate\Support\Str;
 
 class BookingInitializedEventFactory
 {
-    public static function create(): BookingInitializedEvent
+    public static function create(): BookingCreatedEvent
     {
         $faker = Factory::create('nb_NO');
 
-        return new BookingInitializedEvent(
+        $uuid = Str::uuid();
+
+        return new BookingCreatedEvent(
+            $uuid,
             customerEmail: $faker->email,
             customerName: $faker->firstName.' '.$faker->lastName,
             customerPhone: $faker->phoneNumber,
-            type: BookingType::JOINED_TRIP
         );
     }
 }

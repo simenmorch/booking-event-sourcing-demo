@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->uuid()->unique();
-            $table->string('customer_name');
-            $table->string('customer_email')->index();
-            $table->string('customer_phone')->nullable();
+            $table->uuid('booking_uuid')->index();
+            $table->integer('price_total');
+            $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('invoices');
     }
 };

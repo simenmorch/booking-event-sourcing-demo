@@ -4,9 +4,9 @@ namespace App\Domains\Bookings\Projections;
 
 use Spatie\EventSourcing\Projections\Projection;
 
-class BookingProjection extends Projection
+class TicketProjection extends Projection
 {
-    protected $table = 'bookings';
+    protected $table = 'tickets';
 
     protected $guarded = ['id'];
 }
