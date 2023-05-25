@@ -64,9 +64,9 @@ class InitializeBookingCmd
     /**
      * @return int
      */
-    public function getPrice(): int
+    public function getPricePerGuest(): int
     {
-        return Price::calculate($this->getType(), $this->getGuests());
+        return Price::fromName($this->getType()->name)->value;
     }
 
 }

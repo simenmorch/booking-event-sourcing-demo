@@ -19,7 +19,7 @@ class BookingProjector extends Projector
                 'customer_phone' => $event->customerPhone,
                 'type' => $event->type->value,
                 'guests' => $event->guests,
-                'price' => $event->price,
+                'price_per_guest' => $event->pricePerGuest,
             ]);
     }
 }

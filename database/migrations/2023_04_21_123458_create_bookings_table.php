@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('customer_phone')->nullable();
             $table->string('type');
             $table->integer('guests');
-            $table->integer('price');
+            $table->integer('price_per_guest');
             $table->timestamps();
 
             $table->index('customer_email');

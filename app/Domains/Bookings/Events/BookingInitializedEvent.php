@@ -14,7 +14,7 @@ class BookingInitializedEvent extends ShouldBeStored
         public ?string $customerPhone,
         public BookingType $type,
         public int $guests,
-        public int $price,
+        public int $pricePerGuest,
     ) {
     }
 }

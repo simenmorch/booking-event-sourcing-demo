@@ -32,7 +32,7 @@ class BookingAggregateRootTest extends TestCase
 
         $this->assertDatabaseHas((new BookingProjection())->getTable(), [
             'customer_email' => 'simen@adventuretech.no',
-            'price' => 120,
+            'price_per_guest' => 60,
         ]);
 
     }

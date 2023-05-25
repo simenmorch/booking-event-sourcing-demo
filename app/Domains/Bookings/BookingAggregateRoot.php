@@ -17,7 +17,7 @@ class BookingAggregateRoot extends AggregateRoot
             customerPhone: $command->getUserPhone(),
             type: $command->getType(),
             guests: $command->getGuests(),
-            price: $command->getPrice(),
+            pricePerGuest: $command->getPricePerGuest(),
         ));
 
         return $this;
