@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->uuid()->unique();
-            $table->uuid('booking_uuid')->index();
-            $table->integer('price_total');
+            $table->uuid('booking_uuid');
+            $table->integer('total_price');
+            $table->dateTime('credited_at')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\TicketsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,6 @@ Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.ind
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.create');
 
 Route::post('/bookings/{booking}/tickets', [TicketsController::class, 'store'])->name('tickets.create');
+
+Route::post('/bookings/{booking}/invoices', [InvoicesController::class, 'store'])->name('invoices.create');
+Route::get('/bookings/{booking}/current_invoice', [InvoicesController::class, 'current'])->name('invoices.current');

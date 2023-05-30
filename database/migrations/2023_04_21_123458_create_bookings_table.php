@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->uuid()->unique();
+            $table->uuid('current_invoice_uuid')->nullable();
             $table->string('customer_name');
             $table->string('customer_email')->index();
             $table->string('customer_phone')->nullable();

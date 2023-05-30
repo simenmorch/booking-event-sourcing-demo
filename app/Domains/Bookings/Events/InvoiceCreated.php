@@ -4,12 +4,12 @@ namespace App\Domains\Bookings\Events;
 
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class TicketAddedEvent extends ShouldBeStored
+class InvoiceCreated extends ShouldBeStored
 {
     public function __construct(
         public string $bookingUuid,
-        public string $uuid,
-        public int $currentPrice,
+        public string $invoiceUuid,
+        public string $totalPrice,
     ) {
     }
 }

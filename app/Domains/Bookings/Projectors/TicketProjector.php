@@ -16,6 +16,12 @@ class TicketProjector extends Projector
                 'uuid' => $event->uuid,
                 'booking_uuid' => $event->bookingUuid,
                 'current_price' => $event->currentPrice,
+                'created_at' => $event->createdAt(),
             ]);
+    }
+
+    public function resetState():void
+    {
+        TicketProjection::query()->delete();
     }
 }
