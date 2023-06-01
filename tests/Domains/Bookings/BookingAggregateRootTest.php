@@ -7,6 +7,7 @@ use App\Domains\Bookings\Commands\AddTicketsCmd;
 use App\Domains\Bookings\Commands\CreateBookingCmd;
 use App\Domains\Bookings\Commands\CreateInvoiceCmd;
 use App\Domains\Bookings\Commands\UpdateInvoiceCmd;
+use App\Domains\Bookings\Enums\BookingType;
 use App\Domains\Bookings\Enums\Price;
 use App\Domains\Bookings\Events\BookingCreatedEvent;
 use App\Domains\Bookings\Events\InvoiceCreatedEvent;
@@ -39,6 +40,7 @@ class BookingAggregateRootTest extends TestCase
             'simen@adventuretech.no',
             'Simen Mørch',
             '47661720',
+            'joined_trip'
         ));
 
         $this->assertDatabaseHas((new BookingProjection())->getTable(), [
@@ -51,12 +53,17 @@ class BookingAggregateRootTest extends TestCase
     public function test_add_tickets()
     {
         $bookingUuid = Str::uuid();
-        $addTicketsCommand = new AddTicketsCmd($bookingUuid, 2);
-        $uuids = $addTicketsCommand->getUuids();
+        $uuids = [Str::uuid(), Str::uuid()];
+
+        $addTicketsCommand = $this->createMock(AddTicketsCmd::class);
+        $addTicketsCommand->method('getUuids')->willReturn($uuids);
+        $addTicketsCommand->method('getCurrentPrice')->willReturn(Price::JOINED_TRIP->value);
+        $addTicketsCommand->method('getQuantity')->willReturn(2);
 
         BookingAggregateRoot::fake($bookingUuid)
             ->given(
-                new BookingCreatedEvent($bookingUuid, 'simenmoerch@gmail.com', 'Simen Mørch', '47661720',)
+                new BookingCreatedEvent($bookingUuid, 'simenmoerch@gmail.com', 'Simen Mørch', '47661720',
+                    BookingType::JOINED_TRIP->value)
             )
             ->when(function (BookingAggregateRoot $aggregateRoot) use ($bookingUuid, $addTicketsCommand) {
                 $aggregateRoot->addTickets($addTicketsCommand);
@@ -78,6 +85,7 @@ class BookingAggregateRootTest extends TestCase
             'simen@adventuretech.no',
             'Simen Mørch',
             '47661720',
+            BookingType::JOINED_TRIP->value,
         ));
 
         $this->bus->dispatch(new AddTicketsCmd(
@@ -90,7 +98,7 @@ class BookingAggregateRootTest extends TestCase
         $this->assertDatabaseHas((new InvoiceProjection())->getTable(), [
             'booking_uuid' => $bookingUuid,
             'uuid' => $invoiceUuid,
-            'total_price' => (Price::JOINED_TRIP->value * 2)
+            'total_price' => (Price::JOINED_TRIP->value * 2),
         ]);
 
         $booking = BookingProjection::with('currentInvoice')->find($bookingUuid);
@@ -102,10 +110,14 @@ class BookingAggregateRootTest extends TestCase
     public function test_update_invoice()
     {
         $bookingUuid = Str::uuid();
-        $addTicketsCommand = new AddTicketsCmd($bookingUuid, 1);
-        $newTicketUuid = $addTicketsCommand->getUuids()[0];
+        $newTicketUuid = Str::uuid();
         $currentInvoiceUuid = Str::uuid();
         $newInvoiceUuid = Str::uuid();
+
+        $addTicketsCommand = $this->createMock(AddTicketsCmd::class);
+        $addTicketsCommand->method('getUuids')->willReturn([$newTicketUuid]);
+        $addTicketsCommand->method('getCurrentPrice')->willReturn(Price::JOINED_TRIP->value);
+        $addTicketsCommand->method('getQuantity')->willReturn(1);
 
         $updateInvoiceCommand = $this->createMock(UpdateInvoiceCmd::class);
         $updateInvoiceCommand->method('getBookingUuid')->willReturn($bookingUuid->toString());
@@ -115,7 +127,7 @@ class BookingAggregateRootTest extends TestCase
 
         BookingAggregateRoot::fake($bookingUuid)
             ->given([
-                new BookingCreatedEvent($bookingUuid, 'simenmoerch@gmail.com', 'Simen Mørch', '47661720',),
+                new BookingCreatedEvent($bookingUuid, 'simenmoerch@gmail.com', 'Simen Mørch', '47661720', BookingType::JOINED_TRIP->value),
                 new TicketAddedEvent($bookingUuid, Str::uuid(), Price::JOINED_TRIP->value),
                 new InvoiceCreatedEvent($bookingUuid, $currentInvoiceUuid, Price::JOINED_TRIP->value),
             ])

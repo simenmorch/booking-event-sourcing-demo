@@ -11,6 +11,7 @@ class BookingCreatedEvent extends ShouldBeStored
         public string $customerEmail,
         public string $customerName,
         public ?string $customerPhone,
+        public string $type,
     ) {
     }
 }

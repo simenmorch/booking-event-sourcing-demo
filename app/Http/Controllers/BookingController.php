@@ -11,9 +11,9 @@ class BookingController extends Controller
 {
     public function index()
     {
-       return response()->json([
-           'bookings' => BookingProjection::all()
-       ]);
+        return response()->json([
+            'bookings' => BookingProjection::all()
+        ]);
     }
 
     public function store()
@@ -34,6 +34,7 @@ class BookingController extends Controller
             $data['email'],
             $data['name'],
             $data['phone'],
+            $data['type'],
         ));
 
         return response()->json([BookingProjection::find($uuid)]);

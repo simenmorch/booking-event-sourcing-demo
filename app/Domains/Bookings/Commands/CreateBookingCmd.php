@@ -3,6 +3,7 @@
 namespace App\Domains\Bookings\Commands;
 
 use App\Domains\Bookings\BookingAggregateRoot;
+use App\Domains\Bookings\Enums\BookingType;
 use Spatie\EventSourcing\Commands\AggregateUuid;
 use Spatie\EventSourcing\Commands\HandledBy;
 
@@ -14,30 +15,27 @@ class CreateBookingCmd
         private readonly string $userEmail,
         private readonly string $userName,
         private readonly ?string $userPhone,
+        private readonly string $type,
     ) {
     }
 
-    /**
-     * @return string
-     */
     public function getUserEmail(): string
     {
         return $this->userEmail;
     }
 
-    /**
-     * @return string
-     */
     public function getUserName(): string
     {
         return $this->userName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getUserPhone(): ?string
     {
         return $this->userPhone;
+    }
+
+    public function getType():string
+    {
+       return $this->type;
     }
 }

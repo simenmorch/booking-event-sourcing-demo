@@ -8,10 +8,10 @@ enum Price: int
     case JOINED_TRIP = 60;
     case PACKAGE_TRIP = 40;
 
-    public static function fromName(string $name): Price
+    public static function fromBookingType(BookingType $bookingType): Price
     {
         foreach (self::cases() as $case) {
-            if ($case->name === $name) {
+            if ($case->name === $bookingType->name) {
                 return $case;
             }
         }

@@ -20,6 +20,7 @@ class BookingProjector extends Projector
                 'customer_name' => $event->customerName,
                 'customer_email' => $event->customerEmail,
                 'customer_phone' => $event->customerPhone,
+                'type' => $event->type,
                 'created_at' => $event->createdAt(),
             ]);
     }

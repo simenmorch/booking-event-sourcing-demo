@@ -6,7 +6,6 @@ use App\Domains\Bookings\Commands\AddTicketsCmd;
 use App\Domains\Bookings\Commands\CreateBookingCmd;
 use App\Domains\Bookings\Commands\CreateInvoiceCmd;
 use App\Domains\Bookings\Commands\UpdateInvoiceCmd;
-use App\Domains\Bookings\Enums\Price;
 use App\Domains\Bookings\Events\BookingCreatedEvent;
 use App\Domains\Bookings\Events\InvoiceCreatedEvent;
 use App\Domains\Bookings\Events\InvoiceUpdatedEvent;
@@ -23,6 +22,7 @@ class BookingAggregateRoot extends AggregateRoot
             customerEmail: $command->getUserEmail(),
             customerName: $command->getUserName(),
             customerPhone: $command->getUserPhone(),
+            type: $command->getType(),
         ));
 
         return $this;
@@ -30,17 +30,17 @@ class BookingAggregateRoot extends AggregateRoot
 
     public function addTickets(AddTicketsCmd $command): self
     {
-        for ($i = 0; $i < $command->quantity; $i++) {
+        for ($i = 0; $i < $command->getQuantity(); $i++) {
             try {
                 $ticketUuid = $command->getUuids()[$i];
-            } catch (\Exception $ex) {
+            } catch (\Exception) {
                 $ticketUuid = Str::uuid();
             }
 
             $this->recordThat(new TicketAddedEvent(
                 $this->uuid(),
                 $ticketUuid,
-                Price::JOINED_TRIP->value,
+                $command->getCurrentPrice(),
             ));
         }
 
