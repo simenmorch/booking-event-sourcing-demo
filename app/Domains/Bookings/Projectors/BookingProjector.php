@@ -3,8 +3,10 @@
 namespace App\Domains\Bookings\Projectors;
 
 use App\Domains\Bookings\Events\BookingCreatedEvent;
-use App\Domains\Bookings\Events\InvoiceCreated;
+use App\Domains\Bookings\Events\InvoiceCreatedEvent;
+use App\Domains\Bookings\Events\InvoiceUpdatedEvent;
 use App\Domains\Bookings\Projections\BookingProjection;
+use App\Domains\Bookings\Services\BookingService;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class BookingProjector extends Projector
@@ -22,18 +24,26 @@ class BookingProjector extends Projector
             ]);
     }
 
-    public function onInvoiceCreated(InvoiceCreated $event): void
+    public function onInvoiceCreated(InvoiceCreatedEvent $event): void
     {
-        $booking = BookingProjection::find($event->bookingUuid);
+        $booking = BookingService::fetchBooking($event->bookingUuid);
 
         $booking->writeable()->update([
             'current_invoice_uuid' => $event->invoiceUuid
         ]);
     }
 
+    public function onInvoiceUpdated(InvoiceUpdatedEvent $event)
+    {
+        $booking = BookingService::fetchBooking($event->bookingUuid);
+
+        $booking->writeable()->update([
+            'current_invoice_uuid' => $event->newInvoiceUuid
+        ]);
+    }
+
     public function resetState(): void
     {
-
         BookingProjection::query()->delete();
     }
 }

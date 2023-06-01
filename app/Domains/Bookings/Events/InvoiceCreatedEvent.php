@@ -4,7 +4,7 @@ namespace App\Domains\Bookings\Events;
 
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class InvoiceCreated extends ShouldBeStored
+class InvoiceCreatedEvent extends ShouldBeStored
 {
     public function __construct(
         public string $bookingUuid,

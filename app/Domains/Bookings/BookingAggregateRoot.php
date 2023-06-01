@@ -5,9 +5,11 @@ namespace App\Domains\Bookings;
 use App\Domains\Bookings\Commands\AddTicketsCmd;
 use App\Domains\Bookings\Commands\CreateBookingCmd;
 use App\Domains\Bookings\Commands\CreateInvoiceCmd;
+use App\Domains\Bookings\Commands\UpdateInvoiceCmd;
 use App\Domains\Bookings\Enums\Price;
 use App\Domains\Bookings\Events\BookingCreatedEvent;
-use App\Domains\Bookings\Events\InvoiceCreated;
+use App\Domains\Bookings\Events\InvoiceCreatedEvent;
+use App\Domains\Bookings\Events\InvoiceUpdatedEvent;
 use App\Domains\Bookings\Events\TicketAddedEvent;
 use Illuminate\Support\Str;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
@@ -47,10 +49,22 @@ class BookingAggregateRoot extends AggregateRoot
 
     public function createInvoice(CreateInvoiceCmd $command): self
     {
-        $this->recordThat(new InvoiceCreated(
+        $this->recordThat(new InvoiceCreatedEvent(
             $this->uuid(),
             $command->getInvoiceUuid(),
             $command->getTotalPrice()
+        ));
+
+        return $this;
+    }
+
+    public function updateInvoice(UpdateInvoiceCmd $command): self
+    {
+        $this->recordThat(new InvoiceUpdatedEvent(
+            $this->uuid(),
+            $command->getInvoiceUuid(),
+            $command->getCurrentInvoiceUuid(),
+            $command->getNewTotalPrice(),
         ));
 
         return $this;
